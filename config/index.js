@@ -23,6 +23,8 @@ const deepMerge = (target, source) => {
   return target;
 };
 
+/* APIS */
+
 const config = {
   common: {
     database: {
@@ -34,7 +36,8 @@ const config = {
     api: {
       bodySizeLimit: process.env.API_BODY_SIZE_LIMIT,
       parameterLimit: process.env.API_PARAMETER_LIMIT,
-      port: process.env.PORT
+      port: process.env.PORT,
+      apiGeeks: process.env.API_GEEKS,
     },
     session: {
       header_name: 'authorization',
