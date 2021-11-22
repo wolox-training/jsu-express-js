@@ -1,12 +1,6 @@
 const userService = require('../services/user');
 const logger = require('../logger');
-
-const createReponseUser = user => ({
-  id: user.id,
-  firstName: user.firstName,
-  lastName: user.lastName,
-  email: user.email
-});
+const { createReponseUser } = require('../serializers/user');
 
 exports.createUser = async (req, res, next) => {
   try {

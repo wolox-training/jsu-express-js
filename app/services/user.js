@@ -1,25 +1,14 @@
-const bcrypt = require('bcrypt');
-const { Sequelize, ...db } = require('../models');
+const models = require('../models');
 const errors = require('../errors');
 const logger = require('../logger');
+const toEncrypt = require('../helpers/encrypt');
 
-const { Op } = Sequelize;
-
-const toEncrypt = data => {
-  const saltRounds = 5;
-  const salt = bcrypt.genSaltSync(saltRounds);
-  const hash = bcrypt.hashSync(data, salt);
-  return hash;
-};
+const { User } = models;
 
 exports.verifyUniqueEmail = async email => {
   try {
-    const emailUser = await db.User.findOne({
-      where: {
-        email: {
-          [Op.eq]: email
-        }
-      }
+    const emailUser = await User.findOne({
+      where: { email }
     });
     return emailUser;
   } catch {
@@ -30,7 +19,7 @@ exports.verifyUniqueEmail = async email => {
 exports.createUser = async user => {
   try {
     user.password = toEncrypt(user.password);
-    const userCreated = await db.User.create(user);
+    const userCreated = await User.create(user);
     if (userCreated) {
       return userCreated;
     }
