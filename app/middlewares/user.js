@@ -13,11 +13,11 @@ exports.userEmailValidation = (req, _, next) => {
   }
 };
 
-exports.userVerifyUniqueEmail = async (req, _, next) => {
+exports.userVerifyUserByEmail = async (req, _, next) => {
   const { body } = req;
   const { email } = body;
   try {
-    const isExistEmail = await userService.verifyUniqueEmail(email);
+    const isExistEmail = await userService.findUserByEmail(email);
     if (isExistEmail) return next(errors.badRequestError('Email already exist!'));
     return next();
   } catch {

@@ -1,8 +1,8 @@
 const bcrypt = require('bcrypt');
+const config = require('../../config');
 
 module.exports = data => {
-  const saltRounds = 5;
-  const salt = bcrypt.genSaltSync(saltRounds);
+  const salt = bcrypt.genSaltSync(config.common.saltRounds);
   const hash = bcrypt.hashSync(data, salt);
   return hash;
 };

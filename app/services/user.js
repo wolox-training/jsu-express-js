@@ -1,10 +1,8 @@
-const models = require('../models');
+const { User } = require('../models');
 const errors = require('../errors');
 const logger = require('../logger');
 
-const { User } = models;
-
-exports.verifyUniqueEmail = async email => {
+exports.findUserByEmail = async email => {
   try {
     const emailUser = await User.findOne({
       where: { email }
