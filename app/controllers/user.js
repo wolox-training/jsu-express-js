@@ -4,11 +4,7 @@ const toEncrypt = require('../helpers/encrypt');
 
 const { createReponseUser } = require('../serializers/user');
 
-const encryptPassword = (req, _, next) => {
-  const passwordEncrypted = toEncrypt(req.body.password);
-  req.body.password = passwordEncrypted;
-  return next();
-};
+const encryptPassword = password => toEncrypt(password);
 
 exports.createUser = async (req, res, next) => {
   try {
