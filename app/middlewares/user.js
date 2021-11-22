@@ -1,15 +1,6 @@
 const errors = require('../errors');
 const userService = require('../services/user');
-
-const validateEmail = email => {
-  const re = /^\w+@wolox.com.co$/g;
-  return re.test(email);
-};
-
-const verifyPassword = (password = '') => {
-  const regexpEmail = /^[a-zA-Z0-9_]{8,}$/g;
-  return regexpEmail.test(password);
-};
+const { validateEmail, verifyPassword } = require('../helpers/validations');
 
 exports.userEmailValidation = (req, _, next) => {
   const { body } = req;
