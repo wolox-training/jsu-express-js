@@ -1,7 +1,8 @@
 const axios = require('axios');
 const errors = require('../errors');
-const { apiGeeks } = require('../../config').common.api;
+const logger = require('../logger');
 
+const { apiGeeks } = require('../../config').common.api;
 
 exports.getGeekPhrase = async () => {
   try {
@@ -12,7 +13,7 @@ exports.getGeekPhrase = async () => {
     const { data: response } = await axios(configRequest);
     return response;
   } catch (error) {
-    logger.errors(error)
+    logger.errors(error);
     throw errors.apiError('Error to get geeks phrase');
   }
 };

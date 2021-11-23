@@ -23,8 +23,6 @@ const deepMerge = (target, source) => {
   return target;
 };
 
-/* APIS */
-
 const config = {
   common: {
     database: {
@@ -38,6 +36,7 @@ const config = {
       parameterLimit: process.env.API_PARAMETER_LIMIT,
       port: process.env.PORT,
       apiGeeks: process.env.API_GEEKS,
+      saltRounds: process.env.SALT_ROUNDS_ENCRYPT
     },
     session: {
       header_name: 'authorization',
