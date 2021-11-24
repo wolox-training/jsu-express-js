@@ -21,7 +21,7 @@ describe('Test endpoint /users', () => {
     const { body } = await server
       .post('/users')
       .send(userTest)
-      .expect(200);
+      .expect(201);
     const bodyExpected = { ...userTest, id: body.id };
     expect(body).toStrictEqual(userSerializer.createReponseUser(bodyExpected));
   });
