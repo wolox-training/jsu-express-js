@@ -13,7 +13,7 @@ exports.createUser = async (req, res, next) => {
     logger.info('Creating user');
     const user = await userService.createUser(newUser);
     logger.info(`User ${user.firstName} was created successfull`);
-    return res.status(200).send(createReponseUser(user));
+    return res.status(201).send(createReponseUser(user));
   } catch (error) {
     return next(error);
   }
