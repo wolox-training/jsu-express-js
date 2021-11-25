@@ -20,7 +20,7 @@ exports.createUser = async user => {
     if (userCreated) {
       return userCreated;
     }
-    const errorMessage = `User ${user.firstName}  couldn't be created`;
+    const errorMessage = `User ${user.firstName} couldn't be created`;
     logger.info(errorMessage);
     throw errors.databaseError(errorMessage);
   } catch (error) {
