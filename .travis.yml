@@ -22,10 +22,11 @@ before_script:
   - npm install
   - npm run migrations-test
 
-script:
+if: type = push
+  script:
   - npm run lint-fix
   - npm run test
-
+  
 jobs: 
   include:
     - stage: test
