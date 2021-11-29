@@ -1,21 +1,10 @@
-// const controller = require('./controllers/controller');
 const { healthCheck } = require('./controllers/healthCheck');
-const {
-  userVerifyUserByEmail,
-  verifyPassword,
-  userSchema,
-  userSchemaValidator,
-  userEmailValidation,
-} = require('./middlewares/user');
+const { userVerifyUserByEmail } = require('./middlewares/user');
 const { createUser } = require('./controllers/user');
+const { userSchema } = require('./schemas/user');
+const { userSchemaValidator } = require('./schemas/schemaValidator');
 
-const usersMiddlewares = [
-  userSchema(),
-  userSchemaValidator,
-  userVerifyUserByEmail,
-  userEmailValidation,
-  verifyPassword
-];
+const usersMiddlewares = [userSchema(), userSchemaValidator, userVerifyUserByEmail];
 
 exports.init = app => {
   app.get('/health', healthCheck);
