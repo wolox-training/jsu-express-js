@@ -14,3 +14,6 @@ exports.apiError = message => internalError(message, exports.API_ERROR);
 
 exports.BAD_REQUEST_ERROR = 'bad_request_error';
 exports.badRequestError = message => internalError(message, exports.BAD_REQUEST_ERROR);
+
+exports.FORBIDDEN = 'Forbidden_error';
+exports.forbiddenError = message => internalError(message, exports.FORBIDDEN);
