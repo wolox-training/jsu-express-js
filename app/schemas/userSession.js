@@ -1,8 +1,5 @@
 const { checkSchema } = require('express-validator');
-const errors = require('../errors');
-const userService = require('../services/user');
-const { validateEmail, verifyPassword } = require('../helpers/validations');
-const { compareEncrypt } = require('../helpers/encrypt');
+const { EMAIL_REGEXP, PASSWORD_REGEXP } = require('../constants/regexp');
 
 exports.userSessionSchema = () => {
   const check = checkSchema({
@@ -13,9 +10,9 @@ exports.userSessionSchema = () => {
       isString: {
         errorMessage: 'Email should be string'
       },
-      isEmail: {
-        if: email => validateEmail(email),
-        errorMessage: 'Email should be email @wolox.com.co'
+      matches: {
+        options: EMAIL_REGEXP,
+        errorMessage: 'Email Domain needs to be @wolox.com.(co | ar)'
       }
     },
     password: {
@@ -26,26 +23,10 @@ exports.userSessionSchema = () => {
         errorMessage: 'Password name should be string'
       },
       matches: {
-        if: password => verifyPassword(password),
-        errorMessage: 'Password should be alphanumeric and lenght greather than equal 7'
+        options: PASSWORD_REGEXP,
+        errorMessage: "password doesn't meet the required characteristics, minimun lenght 8 and alphanumeric"
       }
     }
   });
   return check;
-};
-
-exports.confirmPassword = async (req, _, next) => {
-  try {
-    const { body } = req;
-    const { email, password } = body;
-    const user = await userService.findUserByEmail(email);
-    if (!user) return next(errors.badRequestError('User incorrect'));
-    const passwordEncrypted = compareEncrypt(password, user.password);
-    if (!passwordEncrypted) {
-      return next(errors.badRequestError('Password incorrect'));
-    }
-    return next();
-  } catch (error) {
-    return next(error);
-  }
 };

@@ -1,4 +1,5 @@
 const { checkSchema } = require('express-validator');
+const { EMAIL_REGEXP, PASSWORD_REGEXP } = require('../constants/regexp');
 
 exports.userSchema = () => {
   const check = checkSchema({
@@ -26,7 +27,7 @@ exports.userSchema = () => {
         errorMessage: 'Email should be string'
       },
       matches: {
-        options: /^\w+@wolox.com.(co|ar)$/,
+        options: EMAIL_REGEXP,
         errorMessage: 'Email Domain needs to be @wolox.com.(co | ar)'
       }
     },
@@ -38,7 +39,7 @@ exports.userSchema = () => {
         errorMessage: 'Password name should be string'
       },
       matches: {
-        options: /^[a-zA-Z0-9_]{8,}$/,
+        options: PASSWORD_REGEXP,
         errorMessage: "password doesn't meet the required characteristics, minimun lenght 8 and alphanumeric"
       }
     }
