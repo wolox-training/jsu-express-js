@@ -26,7 +26,7 @@ exports.userSchema = () => {
         errorMessage: 'Email should be string'
       },
       matches: {
-        options: /^\w+@wolox.com.(co|ar)$/g,
+        options: /^\w+@wolox.com.(co|ar)$/,
         errorMessage: 'Email Domain needs to be wolox.com.co'
       }
     },
@@ -38,7 +38,7 @@ exports.userSchema = () => {
         errorMessage: 'Password name should be string'
       },
       matches: {
-        options: /^[a-zA-Z0-9_]{8,}$/g,
+        options: /^[a-zA-Z0-9_]{8,}$/,
         errorMessage: "password doesn't meet the required characteristics, minimun lenght 7 and alphanumeric"
       }
     }
