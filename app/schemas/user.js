@@ -27,7 +27,7 @@ exports.userSchema = () => {
       },
       matches: {
         options: /^\w+@wolox.com.(co|ar)$/,
-        errorMessage: 'Email Domain needs to be wolox.com.co'
+        errorMessage: 'Email Domain needs to be @wolox.com.(co | ar)'
       }
     },
     password: {
