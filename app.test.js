@@ -50,7 +50,7 @@ describe('Test endpoint /users', () => {
 
   it('Error wrong password POST /users', async () => {
     const responseError = errors.badRequestError({
-      password: "password doesn't meet the required characteristics, minimun lenght 7 and alphanumeric"
+      password: "password doesn't meet the required characteristics, minimun lenght 8 and alphanumeric"
     });
     const bodyPasswordWrong = { ...userTest, password: '11_d' };
     await server.post('/users').send();
