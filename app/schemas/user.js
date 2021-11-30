@@ -39,7 +39,7 @@ exports.userSchema = () => {
       },
       matches: {
         options: /^[a-zA-Z0-9_]{8,}$/,
-        errorMessage: "password doesn't meet the required characteristics, minimun lenght 7 and alphanumeric"
+        errorMessage: "password doesn't meet the required characteristics, minimun lenght 8 and alphanumeric"
       }
     }
   });
