@@ -8,7 +8,7 @@ exports.generateToken = payload => {
     return jwt.sign(payload, config.tokenSecret, { expiresIn: config.expirationToken });
   } catch (error) {
     logger.info(error);
-    throw errors.apiError(error.message);
+    throw errors.tokenError(error.message || 'Error to generate Token');
   }
 };
 
@@ -17,6 +17,6 @@ exports.verifyToken = token => {
     return jwt.verify(token, config.tokenSecret);
   } catch (error) {
     logger.info(error);
-    throw errors.forbiddenError('Error with token');
+    throw errors.tokenError('Invalid Token');
   }
 };
