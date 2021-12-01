@@ -16,7 +16,7 @@ exports.userVerifyUserByEmail = async (req, _, next) => {
 
 exports.verifyCredentials = async (req, _, next) => {
   try {
-    const errorResponse = errors.badRequestError('User or password incorrect')
+    const errorResponse = errors.badRequestError('Email or password incorrect');
     const { body } = req;
     const { email, password } = body;
     const user = await userService.findUserByEmail(email);

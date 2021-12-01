@@ -105,7 +105,7 @@ describe('Test endpoint /user/session', () => {
       .expect(400);
 
     expect(body).toMatchObject({
-      message: 'Password incorrect',
+      message: 'Email or password incorrect',
       internal_code: 'bad_request_error'
     });
   });
