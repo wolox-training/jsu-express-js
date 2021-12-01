@@ -24,7 +24,20 @@ exports.createUser = async user => {
     logger.info(errorMessage);
     throw errors.databaseError(errorMessage);
   } catch (error) {
-    logger.info(error.message);
+    logger.info(error);
+    throw errors.databaseError('database error to create user created');
+  }
+};
+
+exports.findUsers = async ({ limit = 5, offset = 0 }) => {
+  try {
+    const users = await User.findAndCountAll({
+      limit,
+      offset
+    });
+    return users;
+  } catch (error) {
+    logger.info(error);
     throw errors.databaseError('database error to create user created');
   }
 };

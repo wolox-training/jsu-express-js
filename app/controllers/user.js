@@ -28,6 +28,7 @@ exports.signIn = (req, res, next) => {
       message: 'Successful authentication'
     });
   } catch (error) {
+    logger.info(error);
     return next(error);
   }
 };
