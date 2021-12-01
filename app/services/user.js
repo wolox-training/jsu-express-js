@@ -29,7 +29,7 @@ exports.createUser = async user => {
   }
 };
 
-exports.findUsers = async ({ limit = 5, offset = 0 }) => {
+exports.findUsersPaginated = async ({ limit = 5, offset = 0 }) => {
   try {
     const users = await User.findAndCountAll({
       limit,

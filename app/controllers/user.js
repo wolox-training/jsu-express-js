@@ -32,3 +32,13 @@ exports.signIn = (req, res, next) => {
     return next(error);
   }
 };
+
+exports.listUsersPaginated = async (req, res, next) => {
+  try {
+    const { offset, limit } = req.query;
+    const users = await userService.findUsersPaginated({ offset, limit });
+    return res.status(200).send({ users });
+  } catch (error) {
+    return next(error);
+  }
+};
