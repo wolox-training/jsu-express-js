@@ -33,7 +33,7 @@ exports.findUsersPaginated = async ({ limit = 5, offset = 0 }) => {
   try {
     const users = await User.findAndCountAll({
       limit,
-      offset
+      offset: limit * offset
     });
     return users;
   } catch (error) {
