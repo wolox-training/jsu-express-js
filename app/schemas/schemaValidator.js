@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
 const errors = require('../errors');
 
-exports.userSchemaValidator = (req, _, next) => {
+exports.schemaValidator = (req, _, next) => {
   const errorsValidation = validationResult(req);
   if (!errorsValidation.isEmpty()) {
     const errorRecord = errorsValidation.mapped();

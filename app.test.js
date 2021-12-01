@@ -23,7 +23,7 @@ describe('Test endpoint /users', () => {
       .send(userTest)
       .expect(201);
     const bodyExpected = { ...userTest, id: body.id };
-    expect(body).toStrictEqual(userSerializer.createReponseUser(bodyExpected));
+    expect(body).toMatchObject(userSerializer.createReponseUser(bodyExpected));
   });
 
   it('Error email beforeCreated POST /users', async () => {
@@ -33,7 +33,7 @@ describe('Test endpoint /users', () => {
       .post('/users')
       .send(userTest)
       .expect(400);
-    expect(body).toStrictEqual(errorReseponse(responseError));
+    expect(body).toMatchObject(errorReseponse(responseError));
   });
 
   it('Error wrong email POST /users', async () => {
@@ -45,7 +45,7 @@ describe('Test endpoint /users', () => {
       .post('/users')
       .send(payload)
       .expect(400);
-    expect(body).toStrictEqual(errorReseponse(responseError));
+    expect(body).toMatchObject(errorReseponse(responseError));
   });
 
   it('Error wrong password POST /users', async () => {
@@ -58,7 +58,7 @@ describe('Test endpoint /users', () => {
       .post('/users')
       .send(bodyPasswordWrong)
       .expect(400);
-    expect(body).toStrictEqual(errorReseponse(responseError));
+    expect(body).toMatchObject(errorReseponse(responseError));
   });
 
   it('Without firstName and lastName keys POST /users', async () => {
@@ -69,6 +69,62 @@ describe('Test endpoint /users', () => {
     const bodyPasswordWrong = { email: 'test3@wolox.com.co', password: 'testingJest11' };
     await server.post('/users').send();
     const { body } = await server.post('/users').send(bodyPasswordWrong);
-    expect(body).toStrictEqual(errorReseponse(responseError));
+    expect(body).toMatchObject(errorReseponse(responseError));
+  });
+});
+
+describe('Test endpoint /user/session', () => {
+  const userTest = {
+    firstName: 'Test',
+    lastName: 'Test',
+    email: 'test@wolox.com.co',
+    password: 'testingJest11'
+  };
+  const server = request(app);
+  it('Success POST /users/session', async () => {
+    await server.post('/users').send(userTest);
+    const { body } = await server
+      .post('/users/sessions')
+      .send({
+        email: userTest.email,
+        password: userTest.password
+      })
+      .expect(200);
+    expect(body).toHaveProperty('token');
+    expect(body).toHaveProperty('message');
+  });
+
+  it('Error password POST /users/session', async () => {
+    await server.post('/users').send(userTest);
+    const { body } = await server
+      .post('/users/sessions')
+      .send({
+        email: userTest.email,
+        password: `${userTest.password}1`
+      })
+      .expect(400);
+
+    expect(body).toMatchObject({
+      message: 'Email or password incorrect',
+      internal_code: 'bad_request_error'
+    });
+  });
+
+  it('Error email POST /users/session', async () => {
+    await server.post('/users').send(userTest);
+    const { body } = await server
+      .post('/users/sessions')
+      .send({
+        email: `${userTest.email}.es`,
+        password: userTest.password
+      })
+      .expect(400);
+
+    expect(body).toMatchObject({
+      message: {
+        email: 'Email Domain needs to be @wolox.com.(co | ar)'
+      },
+      internal_code: 'bad_request_error'
+    });
   });
 });

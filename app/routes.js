@@ -1,12 +1,12 @@
 const { healthCheck } = require('./controllers/healthCheck');
-const { userVerifyUserByEmail } = require('./middlewares/user');
-const { createUser } = require('./controllers/user');
+const { userVerifyUserByEmail, verifyCredentials } = require('./middlewares/user');
+const { createUser, signIn } = require('./controllers/user');
 const { userSchema } = require('./schemas/user');
-const { userSchemaValidator } = require('./schemas/schemaValidator');
-
-const usersMiddlewares = [userSchema(), userSchemaValidator, userVerifyUserByEmail];
+const { userSessionSchema } = require('./schemas/userSession');
+const { schemaValidator } = require('./schemas/schemaValidator');
 
 exports.init = app => {
   app.get('/health', healthCheck);
-  app.post('/users', ...usersMiddlewares, createUser);
+  app.post('/users', userSchema(), schemaValidator, userVerifyUserByEmail, createUser);
+  app.post('/users/sessions', userSessionSchema(), schemaValidator, verifyCredentials, signIn);
 };

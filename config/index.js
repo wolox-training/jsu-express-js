@@ -36,7 +36,9 @@ const config = {
       parameterLimit: process.env.API_PARAMETER_LIMIT,
       port: process.env.PORT,
       apiGeeks: process.env.API_GEEKS,
-      saltRounds: process.env.SALT_ROUNDS_ENCRYPT
+      saltRounds: process.env.SALT_ROUNDS_ENCRYPT,
+      tokenSecret: process.env.TOKEN_SECRET,
+      expirationToken: process.env.EXPIRATION_TOKEN
     },
     session: {
       header_name: 'authorization',
