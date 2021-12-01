@@ -7,9 +7,6 @@ exports.userSessionSchema = () => {
       exists: {
         errorMessage: 'Email should exist'
       },
-      isString: {
-        errorMessage: 'Email should be string'
-      },
       matches: {
         options: EMAIL_REGEXP,
         errorMessage: 'Email Domain needs to be @wolox.com.(co | ar)'
@@ -18,9 +15,6 @@ exports.userSessionSchema = () => {
     password: {
       exists: {
         errorMessage: 'Password should exist'
-      },
-      isString: {
-        errorMessage: 'Password name should be string'
       },
       matches: {
         options: PASSWORD_REGEXP,

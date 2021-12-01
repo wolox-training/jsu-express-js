@@ -14,15 +14,16 @@ exports.userVerifyUserByEmail = async (req, _, next) => {
   }
 };
 
-exports.confirmPassword = async (req, _, next) => {
+exports.verifyCredentials = async (req, _, next) => {
   try {
+    const errorResponse = errors.badRequestError('User or password incorrect')
     const { body } = req;
     const { email, password } = body;
     const user = await userService.findUserByEmail(email);
-    if (!user) return next(errors.badRequestError('User incorrect'));
+    if (!user) return next(errorResponse);
     const passwordEncrypted = compareEncrypt(password, user.password);
     if (!passwordEncrypted) {
-      return next(errors.badRequestError('Password incorrect'));
+      return next(errorResponse);
     }
     delete user.password;
     // eslint-disable-next-line
