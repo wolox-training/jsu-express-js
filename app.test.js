@@ -127,7 +127,7 @@ describe('Test endpoint POST /user/session', () => {
   });
 });
 
-describe('Test endpoint GET /user', () => {
+describe('Test endpoint GET /users', () => {
   const userTest = {
     firstName: 'Test',
     lastName: 'Test',
@@ -145,21 +145,22 @@ describe('Test endpoint GET /user', () => {
     await Promise.allSettled(allCreations);
   });
 
-  it('Success GET /users/session', async () => {
+  it('Success GET /users', async () => {
     const { body: responseSession } = await server.post('/users/sessions').send(userTest);
     const { token } = responseSession;
     const { body } = await server
       .get('/users')
-      .query({ limit: 0, offset: 5 })
+      .query({ limit: 5, offset: 0 })
       .set('Authorization', `Bearer ${token}`)
       .expect(200);
     expect(body).toHaveProperty('users');
     expect(body.users).toBeInstanceOf(Array);
+    expect(body.users.length).toEqual(5);
     expect(body).toHaveProperty('total');
     expect(body.count).not.toBeNaN();
   });
 
-  it('Invalid Token /users/session', async () => {
+  it('Invalid Token GET /users', async () => {
     const { body: responseSession } = await server.post('/users/sessions').send(userTest);
     const { token } = responseSession;
     const { body } = await server
@@ -170,7 +171,7 @@ describe('Test endpoint GET /user', () => {
     expect(body).toMatchObject(errorReseponse(errors.tokenError('Invalid Token')));
   });
 
-  it('Invalid Params /users/session', async () => {
+  it('Invalid Params /users', async () => {
     const { body: responseSession } = await server.post('/users/sessions').send(userTest);
     const { token } = responseSession;
     const { body } = await server
