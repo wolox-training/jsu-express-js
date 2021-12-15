@@ -9,7 +9,7 @@ const statusCodes = {
   [errors.API_ERROR]: 500,
   [errors.BAD_REQUEST_ERROR]: 400,
   [errors.FORBIDDEN]: 403,
-  [errors.TOKEN_ERROR]: 500
+  [errors.TOKEN_ERROR]: 403
 };
 
 exports.handle = (error, _, res, next) => {

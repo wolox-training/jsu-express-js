@@ -4,3 +4,8 @@ exports.createReponseUser = user => ({
   lastName: user.lastName,
   email: user.email
 });
+
+exports.listUsers = ({ count: total, rows }) => ({
+  total,
+  users: rows
+});

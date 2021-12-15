@@ -2,7 +2,7 @@ const userService = require('../services/user');
 const logger = require('../logger');
 const { toEncrypt } = require('../helpers/encrypt');
 const { generateToken } = require('../helpers/jwt');
-const { createReponseUser } = require('../serializers/user');
+const { createReponseUser, listUsers } = require('../serializers/user');
 
 exports.createUser = async (req, res, next) => {
   try {
@@ -27,6 +27,17 @@ exports.signIn = (req, res, next) => {
       token,
       message: 'Successful authentication'
     });
+  } catch (error) {
+    logger.info(error);
+    return next(error);
+  }
+};
+
+exports.listUsersPaginated = async (req, res, next) => {
+  try {
+    const { offset, limit } = req.query;
+    const userList = await userService.findUsersPaginated({ offset, limit });
+    return res.status(200).send(listUsers(userList));
   } catch (error) {
     return next(error);
   }

@@ -24,7 +24,21 @@ exports.createUser = async user => {
     logger.info(errorMessage);
     throw errors.databaseError(errorMessage);
   } catch (error) {
-    logger.info(error.message);
+    logger.info(error);
     throw errors.databaseError('database error to create user created');
+  }
+};
+
+exports.findUsersPaginated = async ({ limit = 5, offset = 0 }) => {
+  try {
+    logger.info('Starting find users by page');
+    const users = await User.findAndCountAll({
+      limit,
+      offset: limit * offset
+    });
+    return users;
+  } catch (error) {
+    logger.info(error);
+    throw errors.databaseError('database error to find users paginated');
   }
 };

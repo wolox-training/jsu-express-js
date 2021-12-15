@@ -8,7 +8,7 @@ const errorReseponse = error => ({
   internal_code: error.internalCode
 });
 
-describe('Test endpoint /users', () => {
+describe('Test endpoint POST /users', () => {
   const userTest = {
     firstName: 'Test',
     lastName: 'Test',
@@ -73,7 +73,7 @@ describe('Test endpoint /users', () => {
   });
 });
 
-describe('Test endpoint /user/session', () => {
+describe('Test endpoint POST /user/session', () => {
   const userTest = {
     firstName: 'Test',
     lastName: 'Test',
@@ -121,10 +121,71 @@ describe('Test endpoint /user/session', () => {
       .expect(400);
 
     expect(body).toMatchObject({
-      message: {
-        email: 'Email Domain needs to be @wolox.com.(co | ar)'
-      },
+      message: 'Email or password incorrect',
       internal_code: 'bad_request_error'
     });
+  });
+});
+
+describe('Test endpoint GET /users', () => {
+  const userTest = {
+    firstName: 'Test',
+    lastName: 'Test',
+    email: 'test@wolox.com.co',
+    password: 'testingJest11'
+  };
+  const server = request(app);
+
+  beforeEach(async () => {
+    const users = new Array(20).fill(userTest).map((user, index) => ({
+      ...user,
+      email: `test${index || ''}@wolox.com.co`
+    }));
+    const allCreations = users.map(user => server.post('/users').send(user));
+    await Promise.allSettled(allCreations);
+  });
+
+  it('Success GET /users', async () => {
+    const { body: responseSession } = await server.post('/users/sessions').send(userTest);
+    const { token } = responseSession;
+    const { body } = await server
+      .get('/users')
+      .query({ limit: 5, offset: 0 })
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+    expect(body).toHaveProperty('users');
+    expect(body.users).toBeInstanceOf(Array);
+    expect(body.users.length).toEqual(5);
+    expect(body).toHaveProperty('total');
+    expect(body.count).not.toBeNaN();
+  });
+
+  it('Invalid Token GET /users', async () => {
+    const { body: responseSession } = await server.post('/users/sessions').send(userTest);
+    const { token } = responseSession;
+    const { body } = await server
+      .get('/users')
+      .query({ limit: 0, offset: 5 })
+      .set('Authorization', `Bearer ${token}_`)
+      .expect(403);
+    expect(body).toMatchObject(errorReseponse(errors.tokenError('Invalid Token')));
+  });
+
+  it('Invalid Params /users', async () => {
+    const { body: responseSession } = await server.post('/users/sessions').send(userTest);
+    const { token } = responseSession;
+    const { body } = await server
+      .get('/users')
+      .query({ limit: NaN, offset: 'a' })
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400);
+    expect(body).toMatchObject(
+      errorReseponse(
+        errors.badRequestError({
+          offset: 'offset is wrong',
+          limit: 'limit is wrong'
+        })
+      )
+    );
   });
 });
