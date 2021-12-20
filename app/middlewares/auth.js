@@ -26,9 +26,13 @@ exports.isAuthorized = (req, _, next) => {
 };
 
 exports.isAuthorizedByRoles = (...permittedRoles) => (req, res, next) => {
-  const { headers } = req;
-  const token = getToken(headers.authorization);
-  const payloadToken = verifyToken(token);
-  if (payloadToken && permittedRoles.includes(payloadToken.role)) return next();
-  return res.status(403).json({ message: 'Forbidden' });
+  try {
+    const { headers } = req;
+    const token = getToken(headers.authorization);
+    const payloadToken = verifyToken(token);
+    if (payloadToken && permittedRoles.includes(payloadToken.role)) return next();
+    return res.status(403).json(errors.forbiddenError('User not authorized'));
+  } catch (error) {
+    return next(error);
+  }
 };

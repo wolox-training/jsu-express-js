@@ -33,12 +33,10 @@ exports.createOrUpdateUser = async user => {
   try {
     logger.info('Finding user to create or update to admin');
     const userCreatedOrUpdated = await User.findOne({ where: { email: user.email } }).then(obj => {
-      // update
       if (obj) {
         logger.info('User finded ready to update to admin');
         return obj.update(user);
       }
-      // insert
       logger.info('User not found ready to create like admin');
       return User.create(user);
     });
