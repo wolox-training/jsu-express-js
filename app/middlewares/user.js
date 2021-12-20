@@ -1,6 +1,7 @@
 const errors = require('../errors');
 const userService = require('../services/user');
 const { compareEncrypt } = require('../helpers/encrypt');
+const logger = require('../logger');
 
 exports.userVerifyUserByEmail = async (req, _, next) => {
   const { body } = req;
@@ -9,8 +10,9 @@ exports.userVerifyUserByEmail = async (req, _, next) => {
     const isExistEmail = await userService.findUserByEmail(email);
     if (isExistEmail) return next(errors.badRequestError('Email already exist!'));
     return next();
-  } catch {
-    return next(errors.databaseError('Error to verify email'));
+  } catch (error) {
+    logger.info(error);
+    return next(error);
   }
 };
 
@@ -30,6 +32,7 @@ exports.verifyCredentials = async (req, _, next) => {
     req.user = user;
     return next();
   } catch (error) {
+    logger.info(error);
     return next(error);
   }
 };

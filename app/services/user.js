@@ -29,6 +29,24 @@ exports.createUser = async user => {
   }
 };
 
+exports.createOrUpdateUser = async user => {
+  try {
+    logger.info('Finding user to create or update to admin');
+    const userCreatedOrUpdated = await User.findOne({ where: { email: user.email } }).then(obj => {
+      if (obj) {
+        logger.info('User finded ready to update to admin');
+        return obj.update(user);
+      }
+      logger.info('User not found ready to create like admin');
+      return User.create(user);
+    });
+    return userCreatedOrUpdated;
+  } catch (error) {
+    logger.info(error);
+    throw errors.databaseError('database error to creating or updating user to admin');
+  }
+};
+
 exports.findUsersPaginated = async ({ limit = 5, offset = 0 }) => {
   try {
     logger.info('Starting find users by page');
