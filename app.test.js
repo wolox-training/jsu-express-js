@@ -2,6 +2,9 @@ const request = require('supertest');
 const app = require('./app');
 const userSerializer = require('./app/serializers/user');
 const errors = require('./app/errors');
+const roles = require('./app/constants/roles');
+const userService = require('./app/services/user');
+const encrypt = require('./app/helpers/encrypt');
 
 const errorReseponse = error => ({
   message: error.message,
@@ -16,13 +19,12 @@ describe('Test endpoint POST /users', () => {
     password: 'testingJest11'
   };
   const server = request(app);
-
   it('Success POST /users', async () => {
     const { body } = await server
       .post('/users')
       .send(userTest)
       .expect(201);
-    const bodyExpected = { ...userTest, id: body.id };
+    const bodyExpected = { ...userTest, id: body.id, role: roles.REGULAR_USER };
     expect(body).toMatchObject(userSerializer.createReponseUser(bodyExpected));
   });
 
@@ -187,5 +189,69 @@ describe('Test endpoint GET /users', () => {
         })
       )
     );
+  });
+});
+
+describe('Test endpoint POST /admin/users', () => {
+  const userAdminTest = {
+    firstName: 'Test',
+    lastName: 'Test',
+    email: 'test@wolox.com.co',
+    password: 'testingJest11'
+  };
+  const userAdminSession = {
+    email: process.env.USER_ADMIN_EMAIL,
+    password: process.env.USER_ADMIN_PASSWORD
+  };
+  const server = request(app);
+
+  let token = '';
+
+  beforeEach(async () => {
+    await userService.createUser({
+      ...userAdminSession,
+      password: encrypt.toEncrypt(userAdminSession.password),
+      firstName: 'Admin',
+      lastName: 'Admin',
+      role: roles.ADMIN_USER
+    });
+  });
+
+  beforeEach(async () => {
+    const { body: responseSession } = await server.post('/users/sessions').send(userAdminSession);
+    const { token: tokenSession } = responseSession;
+    token = tokenSession;
+  });
+
+  it('Success POST /admin/users', async () => {
+    await server
+      .post('/admin/users')
+      .set('Authorization', `Bearer ${token}`)
+      .send(userAdminTest)
+      .expect(200);
+  });
+
+  it('Failure POST /admin/users', async () => {
+    const { body } = await server
+      .post('/admin/users')
+      .set('Authorization', `Bearer ${token}_`)
+      .expect(403);
+    expect(body).toMatchObject(errorReseponse(errors.tokenError('Invalid Token')));
+  });
+
+  it('Update User POST /admin/users', async () => {
+    const { body: userCreated } = await server
+      .post('/users')
+      .send(userAdminTest)
+      .expect(201);
+    const bodyExpected = { ...userAdminTest, id: userCreated.id, role: roles.REGULAR_USER };
+    delete bodyExpected.password;
+    expect(userCreated).toMatchObject(bodyExpected);
+    const { body: userUpdated } = await server
+      .post('/admin/users')
+      .set('Authorization', `Bearer ${token}`)
+      .send(userAdminTest)
+      .expect(200);
+    expect(userUpdated).toMatchObject({ ...bodyExpected, role: roles.ADMIN_USER });
   });
 });
