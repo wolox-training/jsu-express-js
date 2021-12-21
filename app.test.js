@@ -4,7 +4,6 @@ const userSerializer = require('./app/serializers/user');
 const errors = require('./app/errors');
 const roles = require('./app/constants/roles');
 const userService = require('./app/services/user');
-const encrypt = require('./app/helpers/encrypt');
 
 const errorReseponse = error => ({
   message: error.message,
@@ -204,13 +203,12 @@ describe('Test endpoint POST /admin/users', () => {
     password: process.env.USER_ADMIN_PASSWORD
   };
   const server = request(app);
-
   let token = '';
 
   beforeEach(async () => {
     await userService.createUser({
       ...userAdminSession,
-      password: encrypt.toEncrypt(userAdminSession.password),
+      password: userAdminSession.password,
       firstName: 'Admin',
       lastName: 'Admin',
       role: roles.ADMIN_USER

@@ -6,6 +6,8 @@ const { userSessionSchema } = require('./schemas/userSession');
 const { schemaValidator } = require('./schemas/schemaValidator');
 const { listUserSchema } = require('./schemas/listUserSchema');
 const { isAuthorized, isAuthorizedByRoles } = require('./middlewares/auth');
+const { searchWeet } = require('./middlewares/weet');
+const { createWeet } = require('./controllers/weet');
 const roles = require('./constants/roles');
 
 exports.init = app => {
@@ -20,4 +22,5 @@ exports.init = app => {
     userSchema(),
     createOrUpdateUserToAdmin
   );
+  app.post('/weets', isAuthorized, searchWeet, createWeet);
 };
