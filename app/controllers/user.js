@@ -1,6 +1,5 @@
 const userService = require('../services/user');
 const logger = require('../logger');
-const { toEncrypt } = require('../helpers/encrypt');
 const { generateToken } = require('../helpers/jwt');
 const { createReponseUser, listUsers } = require('../serializers/user');
 const roles = require('../constants/roles');
@@ -8,7 +7,7 @@ const roles = require('../constants/roles');
 exports.createUser = async (req, res, next) => {
   try {
     const { body } = req;
-    const newUser = { ...body, role: roles.REGULAR_USER, password: toEncrypt(body.password) };
+    const newUser = { ...body, role: roles.REGULAR_USER };
     logger.info('Creating user');
     const user = await userService.createUser(newUser);
     logger.info(`User ${user.firstName} was created successfull`);

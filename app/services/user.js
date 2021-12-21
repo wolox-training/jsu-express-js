@@ -1,6 +1,7 @@
 const { User } = require('../models');
 const errors = require('../errors');
 const logger = require('../logger');
+const { toEncrypt } = require('../helpers/encrypt');
 
 exports.findUserByEmail = async email => {
   try {
@@ -16,7 +17,7 @@ exports.findUserByEmail = async email => {
 
 exports.createUser = async user => {
   try {
-    const userCreated = await User.create(user);
+    const userCreated = await User.create({ ...user, password: toEncrypt(user.password) });
     if (userCreated) {
       return userCreated;
     }
