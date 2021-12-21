@@ -24,7 +24,6 @@ exports.saveWeet = async weet => {
     const weetUser = await Weet.create(weet);
     return weetUser;
   } catch (error) {
-    console.log(error);
     logger.info(error);
     throw errors.databaseError('Error to save weet');
   }
